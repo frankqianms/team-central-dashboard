@@ -74,10 +74,19 @@ export default async function run(
     };
   }
 
+  const oboAuthConfig: OnBehalfOfCredentialAuthConfig = {
+    authorityHost: config.authorityHost,
+    clientId: config.clientId,
+    tenantId: config.tenantId,
+    clientSecret: config.clientSecret,
+  };
+
+  console.log(oboAuthConfig);
+
   // Construct teamsfx.
-  let teamsfx: TeamsFx;
+  let oboCredential: OnBehalfOfUserCredential;
   try {
-    teamsfx = new TeamsFx().setSsoToken(accessToken);;
+    oboCredential = new OnBehalfOfUserCredential(accessToken, oboAuthConfig);
   } catch (e) {
     context.log.error(e);
     return {
@@ -92,11 +101,11 @@ export default async function run(
   
   try {
     // do sth here, to call activity notification api
-    const graphClient_userId = await createMicrosoftGraphClient(teamsfx, ["User.Read"]);
+    const graphClient_userId = await createMicrosoftGraphClientWithCredential(oboCredential, ["User.Read"]);
     const userProfile = await graphClient_userId.api("/me").get();
     const userId = userProfile["id"];
     // get installationId
-    const installationId = await getInstallationId(context, teamsfx, userId);
+    const installationId = await getInstallationId(context, oboCredential, userId);
     let postbody = {
       topic: {
         source: "entityUrl",

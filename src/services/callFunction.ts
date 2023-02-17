@@ -17,13 +17,11 @@ export async function callFunction(params?: string) {
     console.log("Before AzFunc1");
     const apiBaseUrl = process.env.REACT_APP_FUNC_ENDPOINT + "/api/";
     // createApiClient(...) creates an Axios instance which uses BearerTokenAuthProvider to inject token to request header
-    const token = (await credential.getToken(""))!.token;
     const apiClient = createApiClient(
       apiBaseUrl,
       new BearerTokenAuthProvider(async () => (await credential.getToken(""))!.token)
     );
     console.log("Before AzFunc");
-    console.log(token);
     const response = await apiClient.get(functionName);
     return response.data;
   } catch (err: unknown) {

@@ -1,7 +1,7 @@
 import { Context } from "@azure/functions";
 import { createMicrosoftGraphClient, OnBehalfOfUserCredential, createMicrosoftGraphClientWithCredential, IdentityType, TeamsFx } from "@microsoft/teamsfx";
 
-export async function getInstallationId(context: Context, teamsfx: TeamsFx, userId: string): Promise<any> {
+export async function getInstallationId(context: Context, credential: OnBehalfOfUserCredential, userId: string): Promise<any> {
   console.log("In getInstallationId");
   try {
     const teamsAppId = process.env.TEAMS_APP_ID;

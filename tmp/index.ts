@@ -77,7 +77,7 @@ export default async function run(
   // Construct teamsfx.
   let teamsfx: TeamsFx;
   try {
-    teamsfx = new TeamsFx().setSsoToken(accessToken);;
+    teamsfx = new TeamsFx().setSsoToken(accessToken);
   } catch (e) {
     context.log.error(e);
     return {
@@ -89,12 +89,14 @@ export default async function run(
       },
     };
   }
+  console.log("teamsfx ready");
   
   try {
     // do sth here, to call activity notification api
     const graphClient_userId = await createMicrosoftGraphClient(teamsfx, ["User.Read"]);
     const userProfile = await graphClient_userId.api("/me").get();
     const userId = userProfile["id"];
+    console.log("userId ready");
     // get installationId
     const installationId = await getInstallationId(context, teamsfx, userId);
     let postbody = {
@@ -111,6 +113,7 @@ export default async function run(
         content: "Task Created",
       },
     };
+    console.log("installationId ready");
 
     let teamsfx_app: TeamsFx;
     teamsfx_app = new TeamsFx(IdentityType.App);
